@@ -1,0 +1,1 @@
+export { default } from "file:///home/arloopa/Documents/front%20&%20back/front/app-front/node_modules/@nuxt/vite-builder/dist/runtime/vite-node.mjs"
