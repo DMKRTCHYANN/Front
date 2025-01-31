@@ -8,7 +8,7 @@
       <h1 class="text-gray-700 font-semibold w-1/4 text-center">Created At</h1>
       <h1 class="text-gray-700 font-semibold w-1/4 text-center"></h1>
     </div>
-    <div v-for="(user) in users" :key="user.id" class="bg-white flex flex-col max-w-[1500px] w-full shadow-md">
+    <div v-for="user in users" :key="user.id" class="bg-white flex flex-col max-w-[1500px] w-full shadow-md">
       <div v-if="user && user.id" class="flex justify-around items-center py-2 px-4 border-b border-gray-200">
         <p class="w-1/4 text-center">{{ user.id }}</p>
         <p class="w-1/4 text-center">{{ user.username }}</p>
@@ -23,8 +23,9 @@
               Update
             </button>
           </NuxtLink>
-          <button @click="deleteUser(user)"
-                  class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300">
+          <button
+              @click="deleteUser(user)"
+              class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300">
             Delete
           </button>
         </div>
@@ -33,38 +34,24 @@
   </div>
 </template>
 <script setup>
-import {ref} from "vue";
-const emit = defineEmits();
-const countries = ref('')
-const props = defineProps({
-  users: {
-    type: Array,
-    required: true,
-  },
-});
+const emit = defineEmits(['edit', 'delete']);
 
-const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/countries`, {
-    headers: {Accept: "application/json"},
-  });
-  if (error) {
-    console.error(error);
-  }
-  if (data) {
-    countries.value = data.value;
-  }
-};
+defineProps({
+  users: {
+    type: Object,
+    required: true,
+    default: () => ({ data: [], total: 0 })
+  },
+  total: Number,
+  currentPage: Number,
+  limit: Number
+});
 
 const editUser = (user) => {
   emit('edit', user);
 };
 
 const deleteUser = (user) => {
-  emit('delete1', user);
+  emit('delete', user);
 };
-
-onMounted(async () => {
-  await nextTick();
-  await getCountries();
-});
 </script>

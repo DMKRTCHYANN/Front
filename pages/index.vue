@@ -1,15 +1,12 @@
 <template>
   <div class="flex w-full h-screen">
     <div class="w-[15%] bg-[#FFFFFF] p-[30px]">
-      <button
-          @click="loadUsers"
-          class="mb-[40px] flex justify-center max-w-[200px] w-full border border-black">
+      <button @click="loadUsers" class="mb-[40px] flex justify-center max-w-[200px] w-full border border-black">
         User
       </button>
       <div>
         <nuxt-link to="/countries">
-          <button
-              class="flex justify-center max-w-[200px] w-full border border-black">
+          <button class="flex justify-center max-w-[200px] w-full border border-black">
             Country
           </button>
         </nuxt-link>
@@ -35,19 +32,30 @@
           </select>
         </div>
         <nuxt-link :to="`/create`">
-          <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-all duration-300">
+          <button
+              class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-all duration-300">
             Create new User
           </button>
         </nuxt-link>
       </div>
       <Dashbord
-          @delete1="deleteUser"
-          :users="users"
+          @delete="deleteUser"
+          :users="users.data"
+          :total="users.total"
+          :currentPage="page"
+          :limit="limit"
+          @page-change="changePage"
       />
+      <div class="flex justify-center gap-4 mt-4">
+        <Pagination
+            :currentPage="page"
+            :totalPages="Math.ceil(users.total / limit)"
+            @changePage="changePage"
+        />
+      </div>
     </div>
   </div>
-  <div v-if="deleteConfirmVisible"
-       class="fixed inset-0 flex justify-center items-center bg-black/10"
+  <div v-if="deleteConfirmVisible" class="fixed inset-0 flex justify-center items-center bg-black/10"
        @click="closeModal">
     <div class="bg-[#212121] w-[500px] p-4 rounded-lg shadow-lg flex flex-col" @click.stop>
       <h1 class="text-lg text-white text-center w-full mb-4">
@@ -66,70 +74,103 @@
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import {ref, onMounted, nextTick} from 'vue';
+import Pagination from '@/components/Pagination.vue';
 
-const users = ref([]);
-const menuVisible = ref(false);
-const updateVisible = ref(false);
-const deleteConfirmVisible = ref(false);
+const users = ref({data: [], total: 0});
+const page = ref(1);
+const limit = ref(4);
 const countries = ref([]);
-const selectedCountryId = ref(""); // Хранит ID выбранной страны
+const selectedCountryId = ref('');
 const checkedUser = ref({});
+const deleteConfirmVisible = ref(false);
 
 const closeModal = () => {
-  menuVisible.value = false;
-  updateVisible.value = false;
   deleteConfirmVisible.value = false;
 };
 
 const getCountries = async () => {
-  const { data, error } = await useFetch(`/api/countries/`);
-  if (error) {
-    console.error('Fetch Error:', error);
-  }
-  if (data) {
-    countries.value = data.value;
+  try {
+    const data = await $fetch('/api/countries/');
+    if (Array.isArray(data)) {
+      countries.value = data;
+    } else {
+      console.error('Unexpected API response:', data);
+      countries.value = [];
+    }
+  } catch (err) {
+    console.error('Unexpected Error:', err);
+    countries.value = [];
   }
 };
 
 const getUsers = async () => {
-  const { data, error } = await useFetch(`/api/users/`);
-  if (error) {
+  try {
+    const response = await $fetch('/api/users/', {
+      params: {page: page.value, limit: limit.value},
+    });
+    users.value = response || {data: [], total: 0};
+  } catch (error) {
     console.error('Fetch Error:', error);
+    users.value = {data: [], total: 0};
   }
-  if (data) {
-    users.value = data.value;
-  }
+};
+
+const getCountryName = (id) => {
+  const country = countries.value.find((c) => c.id === id);
+  return country ? country.name : 'Unknown';
 };
 
 const fetchUsersByCountry = async () => {
-  if (!selectedCountryId.value) return;
-  const { data, error } = await useFetch(`/api/users?countryId=${selectedCountryId.value}`);
-  if (error) {
-    console.error('Fetch Error:', error);
-  }
-  if (data) {
-    users.value = data.value;
+  try {
+    console.log('Selected Country ID:', selectedCountryId.value); // Debug log
+    const response = await $fetch('/api/users/', {
+      params: {
+        country: selectedCountryId.value,
+        page: page.value,
+        limit: limit.value,
+      },
+    });
+    console.log('Response for selected country:', response);
+    users.value = response || { data: [], total: 0 };
+
+    users.value.data = users.value.data.map((user) => ({
+      ...user,
+      countryName: getCountryName(selectedCountryId.value),
+    }));
+  } catch (error) {
+    console.error('Error fetching users by country:', error);
+    users.value = { data: [], total: 0 };
   }
 };
 
+
 const deleteUser = (user) => {
-  checkedUser.value = { ...user };
+  checkedUser.value = {...user};
   deleteConfirmVisible.value = true;
 };
 
 const deleteUserApi = async (user) => {
-  const { error } = await useFetch(`/api/users/${user.id}`, {
-    method: 'DELETE',
-  });
-
-  if (error) {
-    console.error('Fetch Error:', error);
+  try {
+    await $fetch(`/api/users/${user.id}`, {
+      method: 'DELETE',
+    });
+    deleteConfirmVisible.value = false;
+    await getUsers();
+  } catch (error) {
+    console.error('Error deleting user:', error);
   }
+};
 
-  deleteConfirmVisible.value = false;
+const changePage = (newPage) => {
+  if (newPage > 0 && newPage <= Math.ceil(users.value.total / limit.value)) {
+    page.value = newPage;
+    fetchUsersByCountry();
+  }
+};
+
+const loadUsers = async () => {
   await getUsers();
 };
 
