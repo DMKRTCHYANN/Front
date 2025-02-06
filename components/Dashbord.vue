@@ -13,7 +13,7 @@
         <p class="w-1/4 text-center">{{ user.id }}</p>
         <p class="w-1/4 text-center">{{ user.username }}</p>
         <p class="w-1/4 text-center">{{ user.password }}</p>
-        <p class="w-1/4 text-center">{{ user.country ? user.country.name : '' }}</p>
+        <p class="w-1/4 text-center">{{ user.country ? user.country.name : user.countryName }}</p>
         <p class="w-1/4 text-center">{{ user.createdAt }}</p>
         <div class="w-1/4 flex justify-center gap-2">
           <NuxtLink :to="`/users/${user.id}/edit`">

@@ -88,7 +88,7 @@ const closeModal = () => {
 };
 
 const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/countries`);
+  const {data, error} = await useFetch(`/api/api/countries`);
   if (error) {
     console.error(error);
   }
@@ -103,7 +103,7 @@ const deleteCountry = (country) => {
 };
 
 const deleteCountryApi = async (country) => {
-  const {data, error} = await useFetch(`/api/countries/${country.id}`, {
+  const {data, error} = await useFetch(`/api/api/countries/${country.id}`, {
     method: 'DELETE',
     headers: {Accept: "application/json"},
   });

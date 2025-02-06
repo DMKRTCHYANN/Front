@@ -32,7 +32,7 @@ const createCountry = async () => {
     return;
   }
   try {
-    const response = await $fetch(`/api/countries/`, {
+    const response = await $fetch(`/api/api/countries/`, {
       method: "POST",
       headers: {Accept: "application/json", "Content-Type": "application/json"},
       body: {name: country.value.name},

@@ -26,7 +26,7 @@ const countries = ref([]);
 const country = ref({name: ''});
 
 const updateCountry = async () => {
-  const {data, error} = await useFetch(`/api/countries/${route.params.id}`, {
+  const {data, error} = await useFetch(`/api/api/countries/${route.params.id}`, {
     method: 'PUT',
     headers: {Accept: 'application/json'},
     body: JSON.stringify({
@@ -39,7 +39,7 @@ const updateCountry = async () => {
 };
 
 const getCountryById = async () => {
-  const {data, error} = await useFetch(`/api/countries/${route.params.id}`, {
+  const {data, error} = await useFetch(`/api/api/countries/${route.params.id}`, {
     headers: {Accept: 'application/json'},
   });
   if (data.value) {

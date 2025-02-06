@@ -55,7 +55,7 @@ const user = ref({
 });
 
 const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/countries/`, {
+  const {data, error} = await useFetch(`/api/api/countries/`, {
     headers: {Accept: "application/json"},
   });
   if (data) {
@@ -65,7 +65,7 @@ const getCountries = async () => {
 
 const createUser = async () => {
   try {
-    const {data, error} = await useFetch(`/api/users/`, {
+    const {data, error} = await useFetch(`/api/api/users/`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',

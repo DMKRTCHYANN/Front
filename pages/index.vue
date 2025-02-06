@@ -80,7 +80,7 @@ import Pagination from '@/components/Pagination.vue';
 
 const users = ref({data: [], total: 0});
 const page = ref(1);
-const limit = ref(4);
+const limit = ref(5);
 const countries = ref([]);
 const selectedCountryId = ref('');
 const checkedUser = ref({});
@@ -92,7 +92,7 @@ const closeModal = () => {
 
 const getCountries = async () => {
   try {
-    const data = await $fetch('/api/countries/');
+    const data = await $fetch('/api/api/countries/');
     if (Array.isArray(data)) {
       countries.value = data;
     } else {
@@ -107,7 +107,7 @@ const getCountries = async () => {
 
 const getUsers = async () => {
   try {
-    const response = await $fetch('/api/users/', {
+    const response = await $fetch('/api/api/users/', {
       params: {page: page.value, limit: limit.value},
     });
     users.value = response || {data: [], total: 0};
@@ -125,7 +125,7 @@ const getCountryName = (id) => {
 const fetchUsersByCountry = async () => {
   try {
     console.log('Selected Country ID:', selectedCountryId.value); // Debug log
-    const response = await $fetch('/api/users/', {
+    const response = await $fetch('/api/api/users/', {
       params: {
         country: selectedCountryId.value,
         page: page.value,
@@ -153,7 +153,7 @@ const deleteUser = (user) => {
 
 const deleteUserApi = async (user) => {
   try {
-    await $fetch(`/api/users/${user.id}`, {
+    await $fetch(`/api/api/users/${user.id}`, {
       method: 'DELETE',
     });
     deleteConfirmVisible.value = false;

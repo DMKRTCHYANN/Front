@@ -47,7 +47,7 @@ const countries = ref([]);
 const user = ref({username: '', password: '', country: ''});
 
 const getUserById = async () => {
-  const {data, error} = await useFetch(`/api/users/${route.params.id}`, {
+  const {data, error} = await useFetch(`/api/api/users/${route.params.id}`, {
     headers: {Accept: 'application/json'},
   });
   if (data.value) {
@@ -63,7 +63,7 @@ const updateUser = async () => {
   const selectedCountry = countries.value.find(
       (country) => country.name === user.value.country
   );
-  const {data, error} = await useFetch(`/api/users/${route.params.id}`, {
+  const {data, error} = await useFetch(`/api/api/users/${route.params.id}`, {
     method: 'PUT',
     headers: {Accept: 'application/json'},
     body: JSON.stringify({
@@ -78,7 +78,7 @@ const updateUser = async () => {
 };
 
 const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/countries/`, {
+  const {data, error} = await useFetch(`/api/api/countries/`, {
     headers: {Accept: "application/json"},
   });
   if (data) {
