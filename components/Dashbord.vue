@@ -12,7 +12,7 @@
       <div v-if="user && user.id" class="flex justify-around items-center py-2 px-4 border-b border-gray-200">
         <p class="w-1/4 text-center">{{ user.id }}</p>
         <p class="w-1/4 text-center">{{ user.username }}</p>
-        <p class="w-1/4 text-center">{{ user.password }}</p>
+        <p class="w-1/4 text-center break-all">{{ user.password }}</p>
         <p class="w-1/4 text-center">{{ user.country ? user.country.name : user.countryName }}</p>
         <p class="w-1/4 text-center">{{ user.createdAt }}</p>
         <div class="w-1/4 flex justify-center gap-2">
@@ -55,3 +55,10 @@ const deleteUser = (user) => {
   emit('delete', user);
 };
 </script>
+<style>
+.break-all {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+</style>
+

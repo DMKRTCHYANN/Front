@@ -18,18 +18,26 @@
           <label for="country" class="block text-sm font-medium text-gray-700">
             Country <span class="text-red-500">*</span>
           </label>
-          <select
-              id="country"
-              name="country"
-              v-model="selectedCountryId"
-              @change="fetchUsersByCountry"
-              class="mt-1 block mb-[40px] h-[50px] rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option disabled value="">Select a country</option>
-            <option v-for="country in countries" :key="country.id" :value="country.id">
-              {{ country.name }}
-            </option>
-          </select>
+          <div class="flex gap-[20px]">
+            <select
+                id="country"
+                name="country"
+                v-model="selectedCountryId"
+                @change="fetchUsersByCountry"
+                class="mt-1 block mb-[40px] h-[50px] rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option disabled value="">Select a country</option>
+              <option v-for="country in countries" :key="country.id" :value="country.id">
+                {{ country.name }}
+              </option>
+            </select>
+            <button
+                class="bg-red-500 text-white h-[50px] mt-[4px] py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300"
+                @click="loadUsers"
+            >
+              Cansel
+            </button>
+          </div>
         </div>
         <nuxt-link :to="`/create`">
           <button
@@ -124,7 +132,7 @@ const getCountryName = (id) => {
 
 const fetchUsersByCountry = async () => {
   try {
-    console.log('Selected Country ID:', selectedCountryId.value); // Debug log
+    console.log('Selected Country ID:', selectedCountryId.value);
     const response = await $fetch('/api/api/users/', {
       params: {
         country: selectedCountryId.value,
@@ -133,7 +141,7 @@ const fetchUsersByCountry = async () => {
       },
     });
     console.log('Response for selected country:', response);
-    users.value = response || { data: [], total: 0 };
+    users.value = response || {data: [], total: 0};
 
     users.value.data = users.value.data.map((user) => ({
       ...user,
@@ -141,10 +149,9 @@ const fetchUsersByCountry = async () => {
     }));
   } catch (error) {
     console.error('Error fetching users by country:', error);
-    users.value = { data: [], total: 0 };
+    users.value = {data: [], total: 0};
   }
 };
-
 
 const deleteUser = (user) => {
   checkedUser.value = {...user};
