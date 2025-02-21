@@ -82,7 +82,6 @@ const pages = computed(() => {
       processedPages.push(currentPageNum);
     }
   }
-
   return processedPages;
 });
 

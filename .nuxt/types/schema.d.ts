@@ -82,21 +82,11 @@ declare module 'nuxt/schema' {
    },
 
    proxy: {
-      options: {
-         target: string,
-
-         changeOrigin: boolean,
-
-         pathRewrite: {
-            "^/api": string,
-         },
-
-         pathFilter: Array<string>,
-      },
+      options: Array<any>,
    },
   }
   interface PublicRuntimeConfig {
-   BACKEND_URL: string,
+
   }
 }
 declare module 'vue' {

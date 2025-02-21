@@ -1,22 +1,6 @@
 <template>
-  <div class="flex w-full h-full">
-    <div class="w-[15%] bg-[#FFFFFF] p-[30px]">
-      <nuxt-link to="/">
-        <button
-            class="mb-[40px] flex justify-center max-w-[200px] w-full border border-black">
-          User
-        </button>
-      </nuxt-link>
-      <div>
-        <nuxt-link to="/countries">
-          <button
-              class="flex justify-center max-w-[200px] w-full border border-black">
-            Country
-          </button>
-        </nuxt-link>
-      </div>
-    </div>
-    <div class="w-[85%] bg-[#f8f8f8] h-full p-[30px]">
+  <div class="flex w-full h-screen">
+    <div class="flex-grow bg-[#f8f8f8] p-[30px]">
       <div class="flex justify-end mb-[20px] z-0">
         <nuxt-link :to="`countries/countriesCreate`">
           <button
@@ -77,6 +61,9 @@
   </div>
 </template>
 <script setup>
+definePageMeta({
+  layout: 'navbar'
+})
 import {ref, onMounted, nextTick} from 'vue';
 
 const countries = ref([]);
@@ -88,7 +75,7 @@ const closeModal = () => {
 };
 
 const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/api/countries`);
+  const {data, error} = await useFetch(`/api/countries`);
   if (error) {
     console.error(error);
   }
@@ -103,7 +90,7 @@ const deleteCountry = (country) => {
 };
 
 const deleteCountryApi = async (country) => {
-  const {data, error} = await useFetch(`/api/api/countries/${country.id}`, {
+  const {data, error} = await useFetch(`/api/countries/${country.id}`, {
     method: 'DELETE',
     headers: {Accept: "application/json"},
   });

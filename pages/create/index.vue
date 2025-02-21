@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white flex justify-center items-center h-screen">
-    <div class="max-w-[900px] w-full bg-gray-200 p-[10px] rounded-[30px]">
+    <div class="max-w-[900px] w-full bg-gray-800 p-[10px] rounded-[30px]">
       <h1 class="text-xl text-center p-[30px]">Create User</h1>
       <input
           v-model="user.username"
@@ -55,7 +55,7 @@ const user = ref({
 });
 
 const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/api/countries/`, {
+  const {data, error} = await useFetch(`/api/countries/`, {
     headers: {Accept: "application/json"},
   });
   if (data) {
@@ -65,7 +65,7 @@ const getCountries = async () => {
 
 const createUser = async () => {
   try {
-    const {data, error} = await useFetch(`/api/api/users/`, {
+    const {data, error} = await useFetch(`/api/users/`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',

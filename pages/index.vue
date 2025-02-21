@@ -1,18 +1,6 @@
 <template>
   <div class="flex w-full h-screen">
-    <div class="w-[15%] bg-[#FFFFFF] p-[30px]">
-      <button @click="loadUsers" class="mb-[40px] flex justify-center max-w-[200px] w-full border border-black">
-        User
-      </button>
-      <div>
-        <nuxt-link to="/countries">
-          <button class="flex justify-center max-w-[200px] w-full border border-black">
-            Country
-          </button>
-        </nuxt-link>
-      </div>
-    </div>
-    <div class="w-[85%] bg-[#f8f8f8] h-full p-[30px]">
+    <div class="flex-grow bg-[#f8f8f8] ">
       <div class="flex justify-between mb-[20px] z-0">
         <div>
           <label for="country" class="block text-sm font-medium text-gray-700">
@@ -20,7 +8,6 @@
           </label>
           <div class="flex gap-[20px]">
             <select
-                id="country"
                 name="country"
                 v-model="selectedCountryId"
                 @change="fetchUsersByCountry"
@@ -31,22 +18,17 @@
                 {{ country.name }}
               </option>
             </select>
-            <button
-                class="bg-red-500 text-white h-[50px] mt-[4px] py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300"
+            <img
+                v-if="selectedCountryId"
+                src="/images/close.png"
+                alt="Close icon"
+                class="cursor-pointer w-6 h-6 mt-[15px] transition-all duration-300 hover:opacity-80"
                 @click="loadUsers"
-            >
-              Cansel
-            </button>
+            />
           </div>
         </div>
-        <nuxt-link :to="`/create`">
-          <button
-              class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-all duration-300">
-            Create new User
-          </button>
-        </nuxt-link>
       </div>
-      <Dashbord
+      <Dashboard
           @delete="deleteUser"
           :users="users.data"
           :total="users.total"
@@ -83,6 +65,12 @@
   </div>
 </template>
 <script setup>
+definePageMeta({
+  layout: 'navbar'
+})
+
+
+
 import {ref, onMounted, nextTick} from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
@@ -100,7 +88,7 @@ const closeModal = () => {
 
 const getCountries = async () => {
   try {
-    const data = await $fetch('/api/api/countries/');
+    const data = await $fetch('/api/countries');
     if (Array.isArray(data)) {
       countries.value = data;
     } else {
@@ -115,7 +103,7 @@ const getCountries = async () => {
 
 const getUsers = async () => {
   try {
-    const response = await $fetch('/api/api/users/', {
+    const response = await $fetch('/api/users', {
       params: {page: page.value, limit: limit.value},
     });
     users.value = response || {data: [], total: 0};
@@ -133,9 +121,9 @@ const getCountryName = (id) => {
 const fetchUsersByCountry = async () => {
   try {
     console.log('Selected Country ID:', selectedCountryId.value);
-    const response = await $fetch('/api/api/users/', {
+    const response = await $fetch('/api/users', {
       params: {
-        country: selectedCountryId.value,
+        country_id: selectedCountryId.value,
         page: page.value,
         limit: limit.value,
       },
@@ -160,7 +148,7 @@ const deleteUser = (user) => {
 
 const deleteUserApi = async (user) => {
   try {
-    await $fetch(`/api/api/users/${user.id}`, {
+    await $fetch(`/api/users/${user.id}`, {
       method: 'DELETE',
     });
     deleteConfirmVisible.value = false;
@@ -178,12 +166,13 @@ const changePage = (newPage) => {
 };
 
 const loadUsers = async () => {
+  selectedCountryId.value = ''
   await getUsers();
 };
 
 onMounted(async () => {
-  await nextTick();
-  await getUsers();
-  await getCountries();
+    await nextTick();
+    await getUsers();
+    await getCountries();
 });
 </script>

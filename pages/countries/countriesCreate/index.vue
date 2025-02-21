@@ -19,6 +19,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import {ref} from "vue";
 import {useRouter} from "vue-router";
@@ -32,18 +33,19 @@ const createCountry = async () => {
     return;
   }
   try {
-    const response = await $fetch(`/api/api/countries/`, {
+    const response = await $fetch(`/api/countries/`, {
       method: "POST",
       headers: {Accept: "application/json", "Content-Type": "application/json"},
-      body: {name: country.value.name},
+      body: JSON.stringify({name: country.value.name}),
     });
     console.log("The country has been successfully created", response);
     await router.push("/countries");
   } catch (error) {
+    console.error("Error creating country:", error);
     if (error.response && error.response.status === 409) {
       alert("A country with this name already exists. Try another name.");
     } else {
-      console.error("Error creating country:", error);
+      alert("An error occurred. Please try again later.");
     }
   }
 };
