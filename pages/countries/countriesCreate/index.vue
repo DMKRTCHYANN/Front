@@ -1,17 +1,17 @@
 <template>
-  <div class="bg-white flex justify-center items-center h-screen">
-    <div class="max-w-[900px] w-full bg-gray-200 p-[20px] rounded-[30px]">
-      <h1 class="text-2xl text-center p-[30px]">Create Country</h1>
+  <div class="flex items-center justify-center min-h-screen bg-gray-900">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+      <h1 class="text-3xl font-extrabold text-center mb-6">Create Country</h1>
       <input
           v-model="country.name"
           type="text"
           placeholder="Enter country name"
-          class="text-black mb-[20px] max-w-[900px] w-full h-[40px] p-[10px] border-2 border-white rounded-[5px] focus:outline-none focus:text-black focus:ring-2 focus:ring-black focus:shadow-[3px_3px_15px_rgba(0,255,255,1)] transition-all duration-100"
+          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
       />
       <div class="flex justify-center items-center">
         <button
             @click="createCountry"
-            class="bg-green-500 p-[10px] w-[200px] text-white rounded-lg hover:bg-green-600 transition-all duration-300"
+            class="bg-gray-800 p-3 m-[20px] flex justify-center w-full max-w-[250px] text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 transition-all duration-300 shadow-md"
         >
           Submit
         </button>

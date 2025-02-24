@@ -1,21 +1,26 @@
 <template>
-  <div class="bg-white flex justify-center items-center h-screen">
-    <div class="max-w-[900px] w-full bg-gray-200 p-[10px] rounded-[30px]">
-      <h1 class="text-xl text-center p-[30px]">
+  <div class="flex items-center justify-center min-h-screen bg-gray-900">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+      <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">
         Edit Country
       </h1>
       <div v-if="loading" class="text-center text-gray-500">Loading...</div>
       <div v-else>
-
-        <input
-            type="text"
-            v-model="country.name"
-            class="text-black mb-[40px] max-w-[900px] w-full h-[40px] p-[10px] border-2 border-white rounded-[5px] focus:outline-none focus:text-black focus:ring-2 focus:ring-black focus:shadow-[3px_3px_15px_rgba(0,255,255,1)] transition-all duration-100"
-        />
-        <div class="flex justify-center items-center">
+        <div class="mb-6">
+          <label for="country-name" class="block text-sm font-medium text-gray-700 mb-2">
+            Country Name <span class="text-red-500">*</span>
+          </label>
+          <input
+              id="country-name"
+              type="text"
+              v-model="country.name"
+              class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+          />
+        </div>
+        <div class="flex justify-center">
           <button
               @click="updateCountry"
-              class="bg-green-500 p-[10px] w-[200px] text-white rounded-lg hover:bg-green-600 transition-all duration-300"
+              class="bg-gray-800 p-3 flex justify-center w-full max-w-[250px] text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 transition-all duration-300 shadow-md"
           >
             Update
           </button>
@@ -24,7 +29,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

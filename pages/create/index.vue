@@ -22,7 +22,6 @@
         </label>
         <select
             v-model="user.country"
-            id="country"
             name="country"
             class="mt-1 block mb-[40px] h-[50px] w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         >

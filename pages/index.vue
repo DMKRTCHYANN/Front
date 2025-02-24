@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div v-if="deleteConfirmVisible" class="fixed inset-0 flex justify-center items-center bg-black/10"
+  <div v-if="deleteConfirmVisible" class="fixed inset-0 flex justify-center items-center bg-black/40"
        @click="closeModal">
     <div class="bg-[#212121] w-[500px] p-4 rounded-lg shadow-lg flex flex-col" @click.stop>
       <h1 class="text-lg text-white text-center w-full mb-4">
@@ -68,8 +68,6 @@
 definePageMeta({
   layout: 'navbar'
 })
-
-
 
 import {ref, onMounted, nextTick} from 'vue';
 import Pagination from '@/components/Pagination.vue';

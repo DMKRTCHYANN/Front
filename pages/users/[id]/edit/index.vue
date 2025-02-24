@@ -7,7 +7,7 @@
       <div v-if="loading" class="text-center text-gray-500">
         Loading...
       </div>
-      <div v-else>
+      <div>
         <div class="mb-6">
           <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
             Username <span class="text-red-500">*</span>
