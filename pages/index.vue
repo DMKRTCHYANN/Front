@@ -1,8 +1,8 @@
 <template>
   <div class="flex w-full h-screen">
-    <div class="flex-grow bg-[#f8f8f8] ">
+    <div class="flex-grow bg-[#f8f8f8]">
       <div class="flex justify-between mb-[20px] z-0">
-        <div>
+        <div class="flex-1">
           <label for="country" class="block text-sm font-medium text-gray-700">
             Country <span class="text-red-500">*</span>
           </label>
@@ -21,11 +21,19 @@
             <img
                 v-if="selectedCountryId"
                 src="/images/close.png"
-                alt="Close icon"
+                alt="Close"
                 class="cursor-pointer w-6 h-6 mt-[15px] transition-all duration-300 hover:opacity-80"
                 @click="loadUsers"
             />
           </div>
+        </div>
+        <div class="p-[20px]">
+          <img
+              @click="logout"
+              src="/images/logout.svg"
+              alt="Logout"
+              class="cursor-pointer w-10 h-10"
+          />
         </div>
       </div>
       <Dashboard
@@ -65,20 +73,29 @@
   </div>
 </template>
 <script setup>
-definePageMeta({
-  layout: 'navbar'
-})
-
-import {ref, onMounted, nextTick} from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import Pagination from '@/components/Pagination.vue';
+import {useRouter} from 'vue-router';
 
-const users = ref({data: [], total: 0});
+definePageMeta({
+  layout: 'navbar',
+  middleware: ['auth'],
+});
+
+const users = ref({ data: [], total: 0 });
 const page = ref(1);
+const router = useRouter();
 const limit = ref(5);
 const countries = ref([]);
 const selectedCountryId = ref('');
 const checkedUser = ref({});
 const deleteConfirmVisible = ref(false);
+
+const logout = () => {
+  const authToken = useCookie('auth_token')
+  authToken.value = null
+  router.push('/login');
+};
 
 const closeModal = () => {
   deleteConfirmVisible.value = false;
@@ -102,12 +119,12 @@ const getCountries = async () => {
 const getUsers = async () => {
   try {
     const response = await $fetch('/api/users', {
-      params: {page: page.value, limit: limit.value},
+      params: { page: page.value, limit: limit.value },
     });
-    users.value = response || {data: [], total: 0};
+    users.value = response || { data: [], total: 0 };
   } catch (error) {
     console.error('Fetch Error:', error);
-    users.value = {data: [], total: 0};
+    users.value = { data: [], total: 0 };
   }
 };
 
@@ -127,7 +144,7 @@ const fetchUsersByCountry = async () => {
       },
     });
     console.log('Response for selected country:', response);
-    users.value = response || {data: [], total: 0};
+    users.value = response || { data: [], total: 0 };
 
     users.value.data = users.value.data.map((user) => ({
       ...user,
@@ -135,12 +152,12 @@ const fetchUsersByCountry = async () => {
     }));
   } catch (error) {
     console.error('Error fetching users by country:', error);
-    users.value = {data: [], total: 0};
+    users.value = { data: [], total: 0 };
   }
 };
 
 const deleteUser = (user) => {
-  checkedUser.value = {...user};
+  checkedUser.value = { ...user };
   deleteConfirmVisible.value = true;
 };
 
@@ -156,6 +173,7 @@ const deleteUserApi = async (user) => {
   }
 };
 
+
 const changePage = (newPage) => {
   if (newPage > 0 && newPage <= Math.ceil(users.value.total / limit.value)) {
     page.value = newPage;
@@ -164,13 +182,13 @@ const changePage = (newPage) => {
 };
 
 const loadUsers = async () => {
-  selectedCountryId.value = ''
+  selectedCountryId.value = '';
   await getUsers();
 };
 
 onMounted(async () => {
-    await nextTick();
-    await getUsers();
-    await getCountries();
+  await nextTick();
+  await getUsers();
+  await getCountries();
 });
 </script>

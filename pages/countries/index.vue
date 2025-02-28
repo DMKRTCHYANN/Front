@@ -24,15 +24,18 @@
             <p class="w-1/4 text-center"></p>
             <div class="w-1/4 flex justify-center gap-2">
               <NuxtLink :to="`/countries/${country.id}/edit`">
-                <button
-                    class="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 transition-all duration-300">
-                  Update
-                </button>
+                <img
+                    class="cursor-pointer w-7 h-7"
+                    src="/images/edit.svg"
+                    alt="Edit"
+                >
               </NuxtLink>
-              <button @click="deleteCountry(country)"
-                      class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300">
-                Delete
-              </button>
+              <img
+                  @click="deleteCountry(country)"
+                  class="cursor-pointer w-7 h-7"
+                  src="/images/delete.svg"
+                  alt="Delete"
+              >
             </div>
           </div>
         </div>
@@ -52,8 +55,9 @@
                 class="bg-green-500 p-[10px] w-[200px] text-white rounded-lg hover:bg-green-600 transition-all duration-300">
           Cancel
         </button>
-        <button @click="deleteCountryApi(checkedCountry)"
-                class="bg-red-500 text-white w-[200px] py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300">
+        <button
+            @click="deleteCountryApi(checkedCountry)"
+            class="bg-red-500 text-white w-[200px] py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300">
           Delete
         </button>
       </div>
@@ -61,6 +65,8 @@
   </div>
 </template>
 <script setup>
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
 definePageMeta({
   layout: 'navbar'
 })

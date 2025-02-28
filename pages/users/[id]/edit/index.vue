@@ -1,19 +1,39 @@
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gray-900">
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-      <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">
-        Edit User
-      </h1>
-      <div v-if="loading" class="text-center text-gray-500">
-        Loading...
-      </div>
-      <div>
+      <h1 class="text-4xl font-bold text-center text-gray-800 mb-2">Edit User</h1>
+      <div v-if="loading" class="text-center text-gray-500">Loading...</div>
+      <div v-else>
+        <div class="mb-6">
+          <div class="flex items-center justify-center">
+            <label for="file" class="relative cursor-pointer">
+              <div v-if="!imagePreview && !user.image"
+                   class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
+                <span class="text-white text-2xl">+</span>
+              </div>
+              <div v-else
+                   class="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200">
+                <img
+                    :src="imagePreview || `http://localhost:8000${user.image}`"
+                    alt="User preview"
+                    class="w-full h-full object-cover"
+                />
+              </div>
+              <input
+                  type="file"
+                  id="file"
+                  accept="image/*"
+                  class="absolute inset-0 opacity-0 cursor-pointer"
+                  @change="handleFileChange"
+              />
+            </label>
+          </div>
+        </div>
         <div class="mb-6">
           <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
             Username <span class="text-red-500">*</span>
           </label>
           <input
-              id="username"
               type="text"
               v-model="user.username"
               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
@@ -24,9 +44,7 @@
             Country <span class="text-red-500">*</span>
           </label>
           <select
-              id="countries"
               v-model="user.country_id"
-              name="country"
               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
           >
             <option v-for="country in countries" :key="country.id" :value="country.id">
@@ -46,27 +64,33 @@
     </div>
   </div>
 </template>
-
 <script setup>
-import {ref, onMounted} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+const loading = ref(true);
+const selectedFiles = ref(null);
+const imagePreview = ref(null);
 const route = useRoute();
 const router = useRouter();
 const countries = ref([]);
 const user = ref({
   username: '',
-  country_id: ''
+  country_id: '',
+  image: ''
 });
-const loading = ref(true);
+
+const handleFileChange = (event) => {
+  selectedFiles.value = event.target.files;
+  if (selectedFiles.value && selectedFiles.value[0]) {
+    imagePreview.value = URL.createObjectURL(selectedFiles.value[0]);
+  }
+};
 
 const getUserById = async () => {
   try {
     const data = await $fetch(`/api/users/${route.params.id}`);
-    user.value = {
-      username: data.user.username || '',
-      country_id: data.user?.country_id
-    };
+    user.value = data.data[0];
   } catch (error) {
     console.error('Error fetching user:', error);
   }
@@ -82,26 +106,36 @@ const getCountries = async () => {
 
 const updateUser = async () => {
   try {
-    const payload = {
-      username: user.value.username,
-      country_id: user.value.country_id
-    };
-    await $fetch(`/api/users/${route.params.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(payload)
+    const formData = new FormData();
+
+    formData.append("username", user.value.username);
+    formData.append("country_id", user.value.country_id);
+
+
+    if (selectedFiles.value?.[0]) {
+      formData.append("image", selectedFiles.value[0]);
+    }
+
+    const response = await $fetch(`/api/users/${route.params.id}`, {
+      method: "POST",
+      headers: {Accept: 'multipart/form-data'},
+      body: formData,
     });
-    await router.push('/');
+
+
+    await router.push("/");
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error("Error updating user:", error);
+  } finally {
+    if (imagePreview.value) {
+      URL.revokeObjectURL(imagePreview.value);
+    }
   }
 };
 
 onMounted(async () => {
-  try {
-    await getCountries();
-    await getUserById();
-  } finally {
-    loading.value = false;
-  }
+  await getCountries();
+  await getUserById();
+  loading.value = false;
 });
 </script>

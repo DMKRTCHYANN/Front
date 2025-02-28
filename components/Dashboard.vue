@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col items-center mb-[20px]">
-    <div class="grid grid-cols-5 bg-gray-100 w-full max-w-[1500px] py-2 px-4 border-b border-gray-300">
+    <div class="grid grid-cols-6 bg-gray-100 w-full max-w-[1500px] py-2 px-4 border-b border-gray-300">
+      <h1 class="text-gray-700 font-semibold text-center"></h1>
       <h1 class="text-gray-700 font-semibold text-center">ID</h1>
       <h1 class="text-gray-700 font-semibold text-center">Username</h1>
       <h1 class="text-gray-700 font-semibold text-center">Country</h1>
@@ -9,27 +10,35 @@
     <div
         v-for="user in users"
         :key="user.id"
-        class="grid grid-cols-5 items-center bg-white w-full max-w-[1500px] py-2 px-4 border-b border-gray-200"
+        class="grid grid-cols-6 items-center bg-white w-full max-w-[1500px] py-2 px-4 border-b border-gray-200"
     >
+      <div class="flex justify-center">
+        <img
+            v-if="user.image"
+            :src="`http://localhost:8000/storage/${user.image}`"
+            alt="User Image"
+            class="w-10 h-10 rounded-full object-cover"
+        />
+      </div>
       <p class="text-center">{{ user.id }}</p>
       <p class="text-center">{{ user.username }}</p>
       <p class="text-center">{{ user.country ? user.country.name : user.countryName }}</p>
       <p class="text-center">{{ user.created_at }}</p>
       <div class="flex justify-center gap-[10px]">
         <NuxtLink :to="`/users/${user.id}/edit`">
-          <button
-              class="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-600 transition-all duration-300"
+          <img
+              class="cursor-pointer w-7 h-7"
               @click="editUser(user)"
+              src="/images/edit.svg"
+              alt="Edit"
           >
-            Update
-          </button>
         </NuxtLink>
-        <button
+        <img
             @click="deleteUser(user)"
-            class="bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600 transition-all duration-300"
+            class="cursor-pointer w-7 h-7"
+            src="/images/delete.svg"
+            alt="Delete"
         >
-          Delete
-        </button>
       </div>
     </div>
   </div>

@@ -3,5 +3,8 @@
 </template>
 
 <script setup>
-
+definePageMeta({
+  layout: 'navbar',
+  middleware: ["auth"]
+})
 </script>

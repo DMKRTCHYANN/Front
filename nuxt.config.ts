@@ -7,6 +7,9 @@ export default defineNuxtConfig({
   ],
   modules: ['nuxt-proxy'],
   // See options here https://github.com/chimurai/http-proxy-middleware#options
+  // router: {
+  //   middleware: ['auth']
+  // },
   nitro: {
     devProxy: {
       "/api/": {
