@@ -5,7 +5,7 @@
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :placeholder="placeholder"
-        class="w-full p-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+        class="w-full p-2 pr-10 border border-gray-300 rounded-lg"
     />
     <button
         type="button"

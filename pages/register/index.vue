@@ -1,14 +1,13 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-900">
-    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-      <h1 class="text-3xl font-extrabold text-center mb-6">Get Started Now</h1>
+  <div class="flex items-center justify-center min-h-screen bg-gray-200  dark:bg-gray-900">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg dark:bg-gray-700">
+      <h1 class="text-3xl font-extrabold text-center mb-6 dark:text-white">Get Started Now</h1>
       <div class="space-y-4">
-        <!-- Image Upload -->
         <div class="flex items-center justify-center">
           <label for="file" class="relative cursor-pointer">
             <div v-if="!imagePreview && !user.image"
                  class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
-              <span class="text-white text-2xl">+</span>
+              <span class="text-white text-2xl ">+</span>
             </div>
             <div v-else
                  class="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200">
@@ -27,9 +26,8 @@
             />
           </label>
         </div>
-        <!-- Username -->
         <div>
-          <label class="block text-sm font-medium text-gray-700">Username</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-white">Username</label>
           <input
               v-model="user.username"
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
@@ -38,47 +36,44 @@
           />
           <span v-if="errors.username" class="text-red-500 text-sm">{{ errors?.username[0] }}</span>
         </div>
-        <!-- Country -->
         <div>
           <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
-            Country <span class="text-red-500">*</span>
+            <span class="dark:text-white">Country</span>  <span class="text-red-500">*</span>
           </label>
           <select
               v-model="user.country_id"
               name="country"
               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
           >
-            <option value="" disabled>Select a country</option>
+            <option  class="dark:text-black">Select a country</option>
             <option v-for="country in countries" :key="country.id" :value="country.id">
               {{ country.name }}
             </option>
           </select>
           <span v-if="errors.country_id" class="text-red-500 text-sm">{{ errors?.country_id[0] }}</span>
         </div>
-        <!-- Password -->
         <div>
-          <label class="block text-sm font-medium text-gray-700">Password</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-white">Password</label>
           <PasswordInput v-model="user.password" placeholder="Enter password" />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-white">Confirm Password</label>
           <PasswordInput v-model="user.confirm_password" placeholder="Confirm password" />
         </div>
         <span v-if="errors.password" class="text-red-500 text-sm">{{ errors?.password[0] }}</span>
-        <!-- Submit -->
         <div class="flex justify-center">
           <button
               @click="createUser"
               :disabled="isSubmitting"
-              class="bg-gray-800 p-3 flex justify-center w-full max-w-[250px] text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 transition-all duration-300 shadow-md"
+              class="bg-gray-200 p-3 flex justify-center w-full max-w-[250px] text-gray-800 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 transition-all duration-300 shadow-sm  dark:bg-gray-800 dark:text-white"
           >
             {{ isSubmitting ? 'Loading...' : 'Register' }}
           </button>
         </div>
         <div class="text-center">
-          <p>
+          <p class="dark:text-white">
             Have an account?
-            <nuxt-link to="/login" class="text-blue-500 hover:underline">
+            <nuxt-link to="/login" class="text-blue-500 hover:underline ">
               Sign in
             </nuxt-link>
           </p>

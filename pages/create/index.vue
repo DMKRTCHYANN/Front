@@ -44,7 +44,6 @@
 </template>
 <script setup>
 const router = useRouter();
-const route = useRoute();
 const errors = ref([])
 const countries = ref([]);
 const user = ref({

@@ -5,10 +5,11 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/tailwind.css',
   ],
-  modules: ['nuxt-proxy'],
-  // See options here https://github.com/chimurai/http-proxy-middleware#options
-  // router: {
-  //   middleware: ['auth']
+  modules: ['nuxt-proxy', '@nuxt/ui', '@nuxtjs/color-mode'],
+  // ui: {
+  //   notifications: {
+  //     position: 'top-0 bottom-auto'
+  //   }
   // },
   nitro: {
     devProxy: {

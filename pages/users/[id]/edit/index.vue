@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-900">
-    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-      <h1 class="text-4xl font-bold text-center text-gray-800 mb-2">Edit User</h1>
-      <div v-if="loading" class="text-center text-gray-500">Loading...</div>
+  <div class="flex items-center justify-center min-h-screen bg-gray-200 dark:bg-gray-900">
+    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg dark:bg-gray-700">
+      <h1 class="text-4xl font-bold text-center text-gray-800 mb-2 dark:text-white">Edit User</h1>
+      <div v-if="loading" class="text-center text-gray-500 dark:text-white">Loading...</div>
       <div v-else>
         <div class="mb-6">
           <div class="flex items-center justify-center">
@@ -31,7 +31,7 @@
         </div>
         <div class="mb-6">
           <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-            Username <span class="text-red-500">*</span>
+           <span class="dark:text-white">Username </span>  <span class="text-red-500">*</span>
           </label>
           <input
               type="text"
@@ -41,7 +41,7 @@
         </div>
         <div class="mb-8">
           <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
-            Country <span class="text-red-500">*</span>
+            <span class="dark:text-white">Country</span> <span class="text-red-500">*</span>
           </label>
           <select
               v-model="user.country_id"
@@ -55,7 +55,7 @@
         <div class="flex justify-center">
           <button
               @click="updateUser"
-              class="bg-gray-800 p-3 w-full max-w-[250px] text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-600 transition-all duration-300 shadow-md"
+              class="bg-gray-200 p-3 flex justify-center w-full max-w-[250px] text-gray-800 rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 transition-all duration-300 shadow-sm  dark:bg-gray-800 dark:text-white"
           >
             Update
           </button>
@@ -65,9 +65,11 @@
   </div>
 </template>
 <script setup>
+
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+const toast = useToast();
 const loading = ref(true);
 const selectedFiles = ref(null);
 const imagePreview = ref(null);
@@ -107,24 +109,29 @@ const getCountries = async () => {
 const updateUser = async () => {
   try {
     const formData = new FormData();
-
     formData.append("username", user.value.username);
     formData.append("country_id", user.value.country_id);
-
-
     if (selectedFiles.value?.[0]) {
       formData.append("image", selectedFiles.value[0]);
     }
-
-    const response = await $fetch(`/api/users/${route.params.id}`, {
+    await $fetch(`/api/users/${route.params.id}`, {
       method: "POST",
-      headers: {Accept: 'multipart/form-data'},
       body: formData,
     });
-
-
+    toast.add({
+      title: 'User updated!',
+      description: 'User has been successfully updated',
+      color: 'green',
+      timeout: 3000,
+    });
     await router.push("/");
   } catch (error) {
+    toast.add({
+      title: 'Error!',
+      description: 'Failed to update user',
+      color: 'red',
+      timeout: 3000,
+    });
     console.error("Error updating user:", error);
   } finally {
     if (imagePreview.value) {
@@ -132,6 +139,7 @@ const updateUser = async () => {
     }
   }
 };
+
 
 onMounted(async () => {
   await getCountries();
