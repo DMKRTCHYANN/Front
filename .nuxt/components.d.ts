@@ -2,7 +2,8 @@
 import type { DefineComponent, SlotsType } from 'vue'
 type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refresh: () => Promise<void>}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, SlotsType<{ fallback: { error: unknown } }>>
 interface _GlobalComponents {
-      'Dashboard': typeof import("../components/Dashboard.vue")['default']
+      'CountriesModal': typeof import("../components/CountriesModal.vue")['default']
+    'Dashboard': typeof import("../components/Dashboard.vue")['default']
     'Modal': typeof import("../components/Modal.vue")['default']
     'Notification': typeof import("../components/Notification.vue")['default']
     'Pagination': typeof import("../components/Pagination.vue")['default']
@@ -86,7 +87,8 @@ interface _GlobalComponents {
     'UModals': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
     'USlideovers': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-      'LazyDashboard': typeof import("../components/Dashboard.vue")['default']
+      'LazyCountriesModal': typeof import("../components/CountriesModal.vue")['default']
+    'LazyDashboard': typeof import("../components/Dashboard.vue")['default']
     'LazyModal': typeof import("../components/Modal.vue")['default']
     'LazyNotification': typeof import("../components/Notification.vue")['default']
     'LazyPagination': typeof import("../components/Pagination.vue")['default']
@@ -176,6 +178,7 @@ declare module 'vue' {
   export interface GlobalComponents extends _GlobalComponents { }
 }
 
+export const CountriesModal: typeof import("../components/CountriesModal.vue")['default']
 export const Dashboard: typeof import("../components/Dashboard.vue")['default']
 export const Modal: typeof import("../components/Modal.vue")['default']
 export const Notification: typeof import("../components/Notification.vue")['default']
@@ -260,6 +263,7 @@ export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components
 export const UModals: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const USlideovers: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyCountriesModal: typeof import("../components/CountriesModal.vue")['default']
 export const LazyDashboard: typeof import("../components/Dashboard.vue")['default']
 export const LazyModal: typeof import("../components/Modal.vue")['default']
 export const LazyNotification: typeof import("../components/Notification.vue")['default']

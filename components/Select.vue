@@ -6,14 +6,14 @@ const country = ref();
 
 const getCountries = async () => {
   try {
-    const data = await $fetch('/api/countries');
-    if (Array.isArray(data)) {
-      countries.value = data.map((country) => ({
+    const response = await $fetch('/api/countries');
+    if (!response.error && Array.isArray(response.data)) {
+      countries.value = response.data.map((country) => ({
         label: country.name,
         value: country.id,
       }));
     } else {
-      console.error("Unexpected API response:", data);
+      console.error("Unexpected API response:", response);
       countries.value = [];
     }
   } catch (err) {

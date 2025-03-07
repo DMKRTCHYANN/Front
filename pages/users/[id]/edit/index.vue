@@ -47,7 +47,7 @@
               v-model="user.country_id"
               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
           >
-            <option v-for="country in countries" :key="country.id" :value="country.id">
+            <option v-for="country in countries.data" :key="country.id" :value="country.id">
               {{ country.name }}
             </option>
           </select>
@@ -65,7 +65,6 @@
   </div>
 </template>
 <script setup>
-
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 

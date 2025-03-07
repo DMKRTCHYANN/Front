@@ -46,7 +46,7 @@
               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
           >
             <option  class="dark:text-black">Select a country</option>
-            <option v-for="country in countries" :key="country.id" :value="country.id">
+            <option v-for="country in countries.data" :key="country.id" :value="country.id">
               {{ country.name }}
             </option>
           </select>
@@ -91,7 +91,7 @@ import PasswordInput from '~/components/PasswordInput.vue';
 const router = useRouter();
 const errors = ref({});
 const imagePreview = ref(null);
-const countries = ref([]);
+const countries = ref({data: []});
 const isSubmitting = ref(false);
 const user = ref({
   username: '',

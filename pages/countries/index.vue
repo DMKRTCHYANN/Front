@@ -1,7 +1,7 @@
 <template>
   <div class="dark:bg-gray-900 min-h-screen">
     <div class="flex w-full h-screen">
-      <div class="flex-grow  p-[30px] dark:bg-gray-900">
+      <div class="flex-grow p-[30px] dark:bg-gray-900">
         <div class="flex justify-end mb-[20px] z-0">
           <nuxt-link :to="`countries/countriesCreate`">
             <button
@@ -10,100 +10,98 @@
             </button>
           </nuxt-link>
         </div>
-        <div class="flex flex-col items-center mb-[20px]">
-          <div
-              class="flex justify-around bg-gray-100 w-full max-w-[1500px] py-2 px-4 border-b border-gray-300 dark:bg-[#1c2a36] dark:border-gray-700">
-            <h1 class="text-gray-700 font-semibold w-1/4 text-center dark:text-white">ID</h1>
-            <h1 class="text-gray-700 font-semibold w-1/4 text-center dark:text-white">Name</h1>
-            <h1 class="text-gray-700 font-semibold w-1/4 text-center dark:text-white"></h1>
-            <h1 class="text-gray-700 font-semibold w-1/4 text-center dark:text-white"></h1>
+        <div>
+          <div v-if="isLoading" id="loading-overlay" class="space-y-4">
+            <USkeleton class="h-[56px] w-full" />
+            <Skeleton
+                v-for="i in 5"
+                :key="i"
+                class="h-[56px] w-full rounded-lg"
+                animation="wave"
+            />
           </div>
-          <div v-for="country in countries" :key="country.id"
-               class="bg-white flex flex-col max-w-[1500px] w-full shadow-md dark:bg-gray-800">
-            <div v-if="country && country.id"
-                 class="flex justify-around items-center py-2 px-4 border-b border-gray-200 dark:border-gray-700">
-              <p class="w-1/4 text-center dark:text-gray-300">{{ country.id }}</p>
-              <p class="w-1/4 text-center dark:text-gray-300">{{ country.name }}</p>
-              <p class="w-1/4 text-center"></p>
-              <div class="w-1/4 flex justify-center gap-2">
-                <NuxtLink :to="`/countries/${country.id}/edit`">
+          <div v-else>
+            <UTable :rows="countries.data" :columns="columns">
+              <template #actions-data="{ row }">
+                <div class="flex gap-4">
+                  <NuxtLink :to="`/countries/${row.id}/edit`">
+                    <img src="/images/edit.svg" alt="Edit" class="cursor-pointer w-7 h-7 dark:invert" />
+                  </NuxtLink>
                   <img
+                      src="/images/delete.svg"
+                      alt="Delete"
                       class="cursor-pointer w-7 h-7 dark:invert"
-                      src="/images/edit.svg"
-                      alt="Edit"
-                  >
-                </NuxtLink>
-                <img
-                    @click="openDeleteModal(country)"
-                    class="cursor-pointer w-7 h-7 dark:invert"
-                    src="/images/delete.svg"
-                    alt="Delete"
-                >
-              </div>
-            </div>
+                      @click="handleDelete(row)"
+                  />
+                </div>
+              </template>
+            </UTable>
           </div>
         </div>
       </div>
     </div>
+    <CountriesModal
+        v-model="isModalOpen"
+        :country="selectedCountry"
+        @confirm="confirmDelete"
+    />
   </div>
-  <UModal v-model="isOpen">
-    <div class="p-4 text-center">
-      <p>Are you sure you want to delete {{ userToDelete?.name }}?</p>
-      <div class="flex justify-center gap-4 mt-4">
-        <button
-            class="bg-gray-500 px-4 py-2 text-white rounded"
-            @click="cancelDelete"
-        >
-          Cancel
-        </button>
-        <button
-            class="bg-red-500 px-4 py-2 text-white rounded"
-            @click="confirmDelete"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </UModal>
 </template>
+
 <script setup>
+import { ref, onMounted, nextTick } from "vue";
+import CountriesModal from '~/components/CountriesModal.vue';
+
 definePageMeta({
-  layout: 'navbar'
-})
+  layout: "navbar",
+});
 
-const countries = ref([]);
-const isOpen = ref(false);
-const userToDelete = ref(null);
+const countries = ref({ data: [] });
+const isLoading = ref(false);
+const isModalOpen = ref(false);
+const selectedCountry = ref(null);
 
-const openDeleteModal = (country) => {
-  userToDelete.value = country;
-  isOpen.value = true;
-};
+const columns = ref([
+  { key: "id", label: "ID", skeleton: "h-4 w-8" },
+  { key: "name", label: "Name", skeleton: "h-4 w-8" },
+  { key: "actions", label: "Actions", skeleton: "h-4 w-8" },
+]);
 
 const getCountries = async () => {
-  const {data, error} = await useFetch(`/api/countries`);
-  if (data.value) countries.value = data.value;
+  isLoading.value = true;
+  try {
+    const { data } = await useFetch(`/api/countries`);
+    if (data.value) {
+      countries.value = data.value;
+    }
+  } catch (error) {
+    console.error("Ошибка при загрузке стран:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-const cancelDelete = () => {
-  isOpen.value = false;
-  userToDelete.value = null;
+const handleDelete = (country) => {
+  selectedCountry.value = country;
+  isModalOpen.value = true;
 };
 
 const confirmDelete = async () => {
-  if (userToDelete.value) {
-    await deleteCountryApi(userToDelete.value);
-    await getCountries();
+  if (selectedCountry.value) {
+    try {
+      await $fetch(`/api/countries/${selectedCountry.value.id}`, {
+        method: "DELETE",
+      });
+      countries.value.data = countries.value.data.filter(
+          (country) => country.id !== selectedCountry.value.id
+      );
+    } catch (error) {
+      console.error("Ошибка при удалении страны:", error);
+    } finally {
+      isModalOpen.value = false;
+      selectedCountry.value = null;
+    }
   }
-  isOpen.value = false;
-  userToDelete.value = null;
-};
-
-const deleteCountryApi = async (country) => {
-  await useFetch(`/api/countries/${country.id}`, {
-    method: 'DELETE',
-    headers: {Accept: "application/json"},
-  });
 };
 
 onMounted(async () => {
