@@ -8,25 +8,25 @@
           </h3>
           <UButton
               color="gray"
-              variant="ghost"
-              icon="i-heroicons-x-mark-20-solid"
               class="-my-1"
               @click="closeModal"
-          />
+          >
+            ✖
+          </UButton>
         </div>
       </template>
-
       <div class="flex justify-end gap-3 mt-4">
-        <UButton label="Cancel" color="gray" @click="closeModal" />
-        <UButton label="Delete" color="red" @click="confirmDelete" />
+        <UButton label="Cancel" color="gray" @click="closeModal"/>
+        <UButton label="Delete" color="red" @click="confirmDelete"/>
       </div>
     </UCard>
   </UModal>
 </template>
-
 <script setup>
-import { ref, watch } from 'vue';
+import {ref, watch} from 'vue';
 
+const emit = defineEmits(['update:isOpen', 'confirm']);
+const localIsOpen = ref(false);
 const props = defineProps({
   isOpen: {
     type: Boolean,
@@ -38,15 +38,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:isOpen', 'confirm']);
-const localIsOpen = ref(false);
-
 watch(
     () => props.isOpen,
     (newValue) => {
       localIsOpen.value = newValue;
     },
-    { immediate: true }
+    {immediate: true}
 );
 
 watch(localIsOpen, (newValue) => {

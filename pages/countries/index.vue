@@ -33,6 +33,11 @@
                       class="cursor-pointer w-7 h-7 dark:invert"
                       @click="handleDelete(row)"
                   />
+                  <CountriesModal
+                      v-model="isModalOpen"
+                      :country="selectedCountry"
+                      @confirm="confirmDelete"
+                  />
                 </div>
               </template>
             </UTable>
@@ -40,14 +45,8 @@
         </div>
       </div>
     </div>
-    <CountriesModal
-        v-model="isModalOpen"
-        :country="selectedCountry"
-        @confirm="confirmDelete"
-    />
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
 import CountriesModal from '~/components/CountriesModal.vue';
